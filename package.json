@@ -1,0 +1,31 @@
+{
+  "name": "ermes-node-server-test",
+  "version": "0.0.1",
+  "description": "This is a test NODE server for the Ermes Mobile APP.",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.5.1",
+    "connect-flash": "^0.1.1",
+    "consolidate": "^0.12.1",
+    "ejs": "^2.3.1",
+    "express": "^4.7.1",
+    "express-session": "^1.11.1",
+    "html": "0.0.10",
+    "ip": "*",
+    "jade": "^1.9.2",
+    "method-override": "^2.1.2",
+    "mongoose": "~3.6.11",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "path": "^0.11.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "private": true,
+  "main": "server.js"
+}
