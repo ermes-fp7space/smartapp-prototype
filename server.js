@@ -5,6 +5,11 @@ var express = require("express"),
     methodOverride = require("method-override"),
     mongoose = require("mongoose"),
     ip = require("ip"),
+    irrigationInfoModel = require("./models/irrigationInfo")(app, mongoose),
+    yieldModel = require("./models/yield")(app, mongoose),
+    cropModel = require("./models/crop")(app, mongoose),
+    parcelStatusModel = require("./models/parcelStatus")(app, mongoose),
+    soilModel = require("./models/soil")(app, mongoose),
     parcelModel = require("./models/parcel")(app, mongoose),
     userModel = require("./models/user")(app, mongoose),
     ParcelsController = require("./controllers/parcels"),
@@ -24,7 +29,7 @@ mongoose.connect(dbConfig.url, function(err, res){
 app.set('json spaces', 3);
 
 // Tools to use in the APP
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
 //To render HTML
@@ -56,13 +61,21 @@ app.use('/', routes);
 //Parcels API Routes
 var parcelsApiRoute = "/parcels";
 var parcelsApi = express.Router();
-parcelsApi.route(parcelsApiRoute)
-    .get(ParcelsController.findAllParcels)
-    .post(ParcelsController.addParcel);
-parcelsApi.route(parcelsApiRoute + '/:parcelId')
-    .get(ParcelsController.findParcelById)
-    .put(ParcelsController.updateParcel)
-    .delete(ParcelsController.deleteParcel);
+//parcelsApi.route(parcelsApiRoute)
+//    .get(ParcelsController.findAllParcels)
+//    .post(ParcelsController.addParcel);
+parcelsApi.route(parcelsApiRoute + '/soil')
+    .post(ParcelsController.insertSoil);
+parcelsApi.route(parcelsApiRoute + '/parcelStatus')
+    .post(ParcelsController.insertParcelStatus);
+parcelsApi.route(parcelsApiRoute + '/crop')
+    .post(ParcelsController.insertCrop);
+parcelsApi.route(parcelsApiRoute + '/yield')
+    .post(ParcelsController.insertYield);
+parcelsApi.route(parcelsApiRoute + '/irrigationInfo')
+    .post(ParcelsController.insertIrrigationInfo);
+    //.put(ParcelsController.updateParcel)
+    //.delete(ParcelsController.deleteParcel);
 app.use('/api', parcelsApi);
 
 
@@ -86,8 +99,8 @@ app.use('/api', usersApi);
 //app.use('/api', usersApi);
 
 //
-var theport = process.env.PORT || 3030;
+var theport = process.env.PORT || 6585;
 
 //Start to listen.
 app.listen(theport, function(){
-    console.log("Node Server Started On Port" + theport);});
+    console.log("Node Server Started On Port: " + theport);});
