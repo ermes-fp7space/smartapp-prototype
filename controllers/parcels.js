@@ -1,91 +1,298 @@
-//This controller contains the code of the PARCEL REST services.
-//It recieves the petition and the params and makes the operations.
-//It is using the "Parcel" model, so the operations will be stored in the "parcels" collection.
-//Mongoose makes this automatically in a smart Way.
-
 var mongoose = require("mongoose");
+var User = mongoose.model("User");
 var Parcel = mongoose.model("Parcel");
+var Soil = mongoose.model("Soil");
+var ParcelStatus = mongoose.model("ParcelStatus");
+var Crop = mongoose.model("Crop");
+var Yield = mongoose.model("Yield");
+var IrrigationInfo = mongoose.model("IrrigationInfo");
+var bCrypt = require('bcrypt-nodejs');
 
-//GET -  Return all parcels in DataBase
-exports.findAllParcels = function(req, res){
-    Parcel.find(function(err, parcels){
-        if(err) return res.send(500, err.message);
-        res.status(200).jsonp(parcels);
+exports.insertSoil = function(req, res){
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var soil = JSON.parse(req.body.soil);
+   //var soil = JSON.parse(req.body.soil.replace(/\'/g, "\""));
+
+    var newSoil = new Soil();
+    newSoil.soilTexture = soil.soilTexture;
+    newSoil.organicMatter = soil.organicMatter;
+    newSoil.ph = soil.ph;
+    newSoil.updateDate = soil.updateDate;
+
+    User.findOne({'username': name}, function (err, user) {
+
+
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+
+                    user.parcels[i].soils.push(newSoil);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+ };
+
+exports.insertParcelStatus = function(req, res){
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var parcelStatus = JSON.parse(req.body.parcelStatus);
+
+
+    var newParcelStatus = new ParcelStatus();
+    newParcelStatus.parcelStatus = parcelStatus.parcelStatus;
+    newParcelStatus.updateDate = parcelStatus.updateDate;
+
+    User.findOne({'username': name}, function (err, user) {
+
+
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    console.log(newParcelStatus);
+                    user.parcels[i].parcelStatus.push(newParcelStatus);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
     });
 };
 
- //GET - Return a Parcel with specified parcelId.
- exports.findParcelById = function(req, res) {
-     var id = req.params.parcelId;
-     Parcel.findOne({'parcelId': id}, function(err, parcel){
+exports.insertCrop = function(req, res){
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var crop = JSON.parse(req.body.crop);
 
-        if (err) return res.send(500, err.message);
-        if (parcel) {
-            res.status(200).jsonp(parcel);
+
+    var newCrop = new Crop();
+    newCrop.cropType = crop.cropType;
+    newCrop.riceVariety = crop.riceVariety;
+    newCrop.pudding = crop.pudding;
+    newCrop.showingParctice = crop.showingParctice;
+    newCrop.showingDate = crop.showingDate;
+    newCrop.updateDate = crop.updateDate;
+
+    User.findOne({'username': name}, function (err, user) {
+
+        if (err){
+            return res.status(500).send(err.message);
         }
-         else {
-            res.status(200).jsonp("Parcel " + id + " does not exists.");
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    console.log(newCrop);
+                    user.parcels[i].crops.push(newCrop);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
         }
+        else return res.status(200).send("User " + name + " does not exists.");
     });
- }
+};
 
-//POST - Insert a new Parcel in the DB
-exports.addParcel = function(req, res){
+exports.insertYield = function(req, res){
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var yield = JSON.parse(req.body.yield);
 
-    if(!req.body.parcelId)
-        res.status(200).jsonp("parcelId field not find.");
-    else {
-        var parcel = new Parcel({
-            parcelId: req.body.parcelId,
-            ownerId: req.body.ownerId,
-            water: req.body.water,
-            phenology: req.body.phenology,
-            image: req.body.image
-        });
 
-        parcel.save(function (err, parcel) {
-            if (err) return res.send(500, err.message);
-            res.status(200).jsonp(parcel);
-        });
+    var newYield = new Yield();
+    newYield.harvestDate = yield.harvestDate;
+    newYield.yield = yield.yield;
+    newYield.comments = yield.comments;
+
+    User.findOne({'username': name}, function (err, user) {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    console.log(newYield);
+                    user.parcels[i].yields.push(newYield);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+};
+
+exports.insertIrrigationInfo = function(req, res){
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var irrigationInfo = JSON.parse(req.body.irrigationInfo);
+
+
+    var newIrrigationInfo = new IrrigationInfo();
+    newIrrigationInfo.startDate = irrigationInfo.startDate;
+    newIrrigationInfo.endDate = irrigationInfo.endDate;
+    newIrrigationInfo.quantityOfWaterMeasure = irrigationInfo.quantityOfWaterMeasure;
+    newIrrigationInfo.quantityOfWaterValue = irrigationInfo.quantityOfWaterValue;
+    newIrrigationInfo.quantityOfWaterHours = irrigationInfo.quantityOfWaterHours;
+    newIrrigationInfo.waterDepth = irrigationInfo.waterDepth;
+
+    User.findOne({'username': name}, function (err, user) {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    user.parcels[i].irrigationInfos.push(newIrrigationInfo);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+};
+
+function isValidPassword(user, password) {
+    return bCrypt.compareSync(password, user.password);
+}
+
+function stringToIntArray(stringArray){
+    var intArray = [];
+    for (var i = 0; i < stringArray.length; i++) {
+        intArray.push(parseInt(stringArray[i]))
     }
-};
+    return intArray;
+}
 
-//PUT - Update an existing parcel.
-exports.updateParcel = function(req, res){
-    var id = req.params.parcelId;
-    Parcel.findOne({'parcelId': id}, function(err, parcel){
-        if (err) return res.send(500, err.message);
-        if(parcel==null){
-            res.status(200).send("Parcel " + id + " does not exists.");
+function contains(a, obj) {
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] == obj) {
+            return true;
         }
-        else{
-            parcel.parcelId = id;
-            parcel.ownerId = req.body.ownerId;
-            parcel.water = req.body.water;
-            parcel.phenology = req.body.phenology;
-            parcel.image = req.body.image;
+    }
+    return false;
+}
 
-            parcel.save(function(err, parcel) {
-                if (err) return res.send(500, err.message);
-                res.status(200).jsonp(parcel);
-            });
-        }
-    });
-};
-
-//DELETE - Delete a Parcel using the parcelId
-exports.deleteParcel = function(req, res){
-    var id = req.params.parcelId;
-
-    Parcel.findOne({'parcelId': id}, function(err, parcel){
-        if(parcel==null){
-            res.status(200).send("Parcel " + id + " does not exists.");
-        }
-        else {
-            parcel.remove(function (err) {
-                if (err) return res.send(500, err.message);
-                res.status(200).send("Parcel " + id + " deleted.");
-            });
-        }
-    });
-};
+function getParcelsArray(parcelsJson){
+    var parcelsArray = [];
+    for (var i = 0; i < parcelsJson.length; i++) {
+        parcelsArray.push(parcelsJson[i].parcelId);
+    }
+    return parcelsArray;
+}

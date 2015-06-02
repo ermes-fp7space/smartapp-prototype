@@ -51,8 +51,8 @@
                 email = $form.find( "input[name='email']" ).val(),
 
 
-                //url = "http://localhost:3030/signup";
-                url = $form.attr( "action" );
+                url = "http://localhost:6585/signup";
+                //url = $form.attr( "action" );
         // Make the POST
         var posting = $.post( url, { username: username, password: password, email: email} );
 

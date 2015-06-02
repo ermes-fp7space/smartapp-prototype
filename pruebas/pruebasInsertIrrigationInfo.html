@@ -10,7 +10,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
-            <h1 class="text-center">Insert CROP</h1>
+            <h2 class="text-center">Insert IRRIGATION INFO</h2>
             <div>
                 <form class="form-horizontal" id="loginForm">
                     <div class="form-group" >
@@ -23,7 +23,7 @@
                         <input type="text" class="form-control" name="parcels" placeholder="Parcels separated by commas. IE: '1,4,54'" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="crop" placeholder="Insert Crop" required/>
+                        <input type="text" class="form-control" name="irrigationInfo" placeholder="Insert Irrigation Info" required/>
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
 
@@ -32,7 +32,7 @@
         </div>
     </div>
 </div>
-EXAMPLE: { "cropType": "Rice", "riceVariety": "Augusto", "pudding": true, "showingParctice": "Direct Seeding", "showingDate": "02/05/2015", "harvestDate": "02/05/2015" }
+EXAMPLE: { "startDate": "06/06/2015", "endDate": "07/06/2015", "quantityOfWaterMeasure": "m3/h", "quantityOfWaterValue": 0.5, "quantityOfWaterHours": 3, "waterDepth": 25 }
 <div>
     <ul id="response">
 
@@ -52,13 +52,13 @@ EXAMPLE: { "cropType": "Rice", "riceVariety": "Augusto", "pudding": true, "showi
                 parcels = $form.find( "input[name='parcels']" ).val(),
                 password = $form.find( "input[name='password']" ).val(),
                 arrayParcels = parcels.split(','),
-                crop = $form.find( "input[name='crop']" ).val(),
+                irrigationInfo = $form.find( "input[name='irrigationInfo']" ).val(),
 
-                url = "http://localhost:6585/api/parcels/crop";
+                url = "http://localhost:6585/api/parcels/irrigationInfo";
                 //url = $form.attr( "action" );
 
         // Make the POST
-        var posting = $.post( url, { username: username, password: password, parcels: arrayParcels, crop: crop} );
+        var posting = $.post( url, { username: username, password: password, parcels: arrayParcels, irrigationInfo: irrigationInfo} );
 
         // Show results asynchronously.
         posting.done(function( data ) {

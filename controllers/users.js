@@ -6,7 +6,9 @@
 var mongoose = require("mongoose");
 var User = mongoose.model("User");
 var Parcel = mongoose.model("Parcel");
-
+var Soil = mongoose.model("Soil");
+var response = null;
+var bCrypt = require('bcrypt-nodejs');
 //GET -  Return all users in DataBase
 exports.findAllUsers = function(req, res){
     User.find(function(err, users){
@@ -31,44 +33,55 @@ exports.findUserByName = function(req, res) {
     });
 };
 
-
-
-exports.insertParcelsInUser = function(req, res) {
+/*exports.insertSoils = function(req, res){
     var name = req.body.username;
-
     User.findOne({'username': name}, function (err, user) {
-
         if (err){
             return res.status(500).send(err.message);
         }
         else if (user) {
-            var newParcels = req.body.parcels.split(",");
-            var currentParcels = [];
-            for(var i = 0; i < user.parcels.length; i++){
-                currentParcels.push(user.parcels[i].parcelId);
-            }
-            for(var i = 0; i < newParcels.length; i++){
-                var p = parseInt(newParcels[i]);
+            var parcelsToUpdate = req.body.parcels;
+            for(var i = 0; i < parcelsToUpdate.length; i++) {
+                User.findOne({"parcels.parcelId": parcelsToUpdate[i]}, function(err, user2) {
+                    if (err){
+                        return res.status(500).send(err.message);
+                    }
+                    else if (user2) {
+                        var newSoil = new Soil();
+                        newSoil.soilTexture = req.body.soil.soilTexture;
+                        newSoil.organicMatter = req.body.soil.organicMatter;
+                        newSoil.ph = req.body.soil.ph;
+                        newSoil.updateDate = req.body.soil.updateDate;
+                        user2.parcels
 
-                if(!contains(currentParcels, p) && isInt(p)){
-                    var newParcel = new Parcel();
-                    newParcel.parcelId = p;
-                    currentParcels.push(p);
-                    user.parcels.push(newParcel);
-                }
+                    }
+
+                });
             }
-            user.save(function (err) {
-                if (err){
-                    return res.status(500).send(err.message);
-                }
-                else{
-                    var response= '{"user": "' + user.username +
-                        '", "email": "' + user.email +
-                        '", "parcels": "' +  currentParcels + '"}';
-                    var responseJson = JSON.parse(response);
-                    return res.status(200).jsonp(responseJson);
-                }
-            });
+        }
+        else {
+            return res.status(200).send("User " + name + " does not exists.");
+        }
+    });
+};*/
+
+exports.insertParcelsInUser = function(req, res) {
+    var name = req.body.username;
+    console.log(req.body);
+    response = res;
+    User.findOne({'username': name}, function (err, user) {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if (user) {
+            var newParcels = req.body.parcels;
+
+            if(!isValidPassword(user, req.body.password)){
+
+                return res.status(200).send("Password Wrong.");
+            }
+
+            getUsedParcels(user, newParcels);
         }
         else {
             return res.status(200).send("User " + name + " does not exists.");
@@ -76,9 +89,88 @@ exports.insertParcelsInUser = function(req, res) {
     });
 };
 
+function getUsedParcels(user, newPacels){
+    User.find({},{"_id": 0, "parcels.parcelId": 1}, function(err, parcels){
+        var totalOwnedParcels = [];
+        for(var i = 0; i < parcels.length; i++) {
+
+            var userParcels = parcels[i].parcels;
+
+            for(var j = 0; j < userParcels.length; j++) {
+               totalOwnedParcels.push(userParcels[j].parcelId);
+            }
+        }
+        console.log("ParcelasTotales: " + totalOwnedParcels);
+        getPreviousUserParcels(user, totalOwnedParcels, newPacels);
+    });
+}
+
+function getPreviousUserParcels(user, totalOwnedParcels, newPacels){
+    User.findOne({username: user.username}, function(err, user){
+        var previousOwnedParcels = [];
+            var userParcels = user.parcels;
+            for(var j = 0; j < userParcels.length; j++) {
+                    previousOwnedParcels.push(userParcels[j].parcelId);
+            }
+        console.log("Mis Parcelas: " + previousOwnedParcels);
+        differenceBetweenArrays(totalOwnedParcels, previousOwnedParcels, user, newPacels);
+    });
+}
+
+function differenceBetweenArrays(bigArray, smallArray, user, newPacels){
+    var difference = []
+
+    for(var i=0;i<bigArray.length;i++){
+
+        if(!contains(smallArray,bigArray[i])){
+
+            difference.push(bigArray[i]);
+        }
+    }
+
+    updateUserParcels(user, difference, newPacels);
+}
+
+function updateUserParcels(user, usedParcels, newParcels){
+
+    console.log("Used Parcels: " + usedParcels);
+    console.log("New Parcels: " + newParcels);
+    for(var i = 0; i < newParcels.length; i++){
+        if(contains(usedParcels, newParcels[i])){
+            response.status(200).send("ParcelsUsed");
+            return;
+        }
+    }
+    user.parcels = [];
+
+    for(var i = 0; i < newParcels.length; i++){
+        var p = parseInt(newParcels[i]);
+        if(isInt(p)){
+            var newParcel = new Parcel();
+            newParcel.parcelId = p;
+            user.parcels.push(newParcel);
+        }
+    }
+    user.save(function (err) {
+        if (err){
+            return response.status(500).send(err.message);
+        }
+        else{
+            var responseText= '{"user": "' + user.username +
+                '", "email": "' + user.email + '"}';
+            var responseJson = JSON.parse(responseText);
+            return response.status(200).jsonp(responseJson);
+        }
+    });
+}
+
+function isValidPassword(user, password) {
+    return bCrypt.compareSync(password, user.password);
+}
+
 function contains(a, obj) {
     for (var i = 0; i < a.length; i++) {
-        if (a[i] === obj) {
+        if (a[i] == obj) {
             return true;
         }
     }

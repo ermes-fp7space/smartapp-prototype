@@ -46,8 +46,8 @@
                 password = $form.find( "input[name='password']" ).val(),
 
 
-                //url = "http://localhost:3030/login";
-                url = $form.attr( "action" );
+                url = "http://localhost:6585/login";
+                //url = $form.attr( "action" );
         // Make the POST
         var posting = $.post( url, { username: username, password: password} );
 
