@@ -46,7 +46,8 @@
                 password = $form.find( "input[name='password']" ).val(),
 
 
-                url = "http://localhost:6585/login";
+                //url = "http://localhost:6585/login";
+                url = "http://ermes.dlsi.uji.es:6585/login";
                 //url = $form.attr( "action" );
         // Make the POST
         var posting = $.post( url, { username: username, password: password} );

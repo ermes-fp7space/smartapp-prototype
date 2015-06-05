@@ -12,7 +12,7 @@
         <div class="col-sm-6 col-md-4 col-md-offset-4">
             <h1 class="text-center">Registration</h1>
             <div>
-                <form class="form-horizontal" action="https://ermesmobileserver.herokuapp.com/signup" id="registerForm">
+                <form class="form-horizontal" id="registerForm">
                     <div class="form-group" >
                         <input type="text" class="form-control" name="username" placeholder="Username" required>
                     </div>
@@ -52,6 +52,7 @@
 
 
                 url = "http://localhost:6585/signup";
+                //url = "http://ermes.dlsi.uji.es:6585/signup";
                 //url = $form.attr( "action" );
         // Make the POST
         var posting = $.post( url, { username: username, password: password, email: email} );

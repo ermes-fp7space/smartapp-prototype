@@ -19,6 +19,8 @@ module.exports = function(passport){
 
     //Login page: GET
     router.get('/', function(req, res) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         //Login with flash message.
         res.send("Server working!");
     });
@@ -26,6 +28,8 @@ module.exports = function(passport){
 
     //Login page: POST
     router.post('/login', function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         passport.authenticate('login', function(err, user, info) {
             if (err) {
                 return next(err);
@@ -48,6 +52,8 @@ module.exports = function(passport){
 
     //Resgister page: POST
     router.post('/signup', function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         passport.authenticate('signup', function(err, user, info) {
             if (err) {
                 return next(err);

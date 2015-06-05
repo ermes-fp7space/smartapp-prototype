@@ -20,7 +20,7 @@
                         <input type="password" class="form-control" name="password" placeholder="Password">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="parcels" placeholder="Parcels separated by commas. IE: '1,4,54'" required>
+                        <input type="text" class="form-control" name="parcels" placeholder="Parcels separated by commas. IE: '1,4,54'">
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                     <a href="/NodeServer/pruebas/pruebasRegister.html">Create an account.</a>
@@ -48,9 +48,12 @@
                 username = $form.find( "input[name='username']" ).val(),
                 password = $form.find( "input[name='password']" ).val(),
                 parcels = $form.find( "input[name='parcels']" ).val(),
+                //arrayParcels = [];
                 arrayParcels = parcels.split(',');
-
+                console.debug("ARRAY: " + arrayParcels);
+                console.log("TEXT: " + parcels);
                 url = "http://localhost:6585/api/users";
+                //url = "http://ermes.dlsi.uji.es:6585/api/users";
                 //url = $form.attr( "action" );
 
         // Make the POST

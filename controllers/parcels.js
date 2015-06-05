@@ -3,12 +3,17 @@ var User = mongoose.model("User");
 var Parcel = mongoose.model("Parcel");
 var Soil = mongoose.model("Soil");
 var ParcelStatus = mongoose.model("ParcelStatus");
-var Crop = mongoose.model("Crop");
+var CropInfo = mongoose.model("CropInfo");
 var Yield = mongoose.model("Yield");
 var IrrigationInfo = mongoose.model("IrrigationInfo");
+var Fertilizer = mongoose.model("Fertilizer");
+var Agrochemical = mongoose.model("Agrochemical");
+var Phenology = mongoose.model("Phenology");
 var bCrypt = require('bcrypt-nodejs');
 
 exports.insertSoil = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     var parcels = stringToIntArray(req.body.parcels);
     var password = req.body.password;
@@ -62,6 +67,8 @@ exports.insertSoil = function(req, res){
  };
 
 exports.insertParcelStatus = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     var parcels = stringToIntArray(req.body.parcels);
     var password = req.body.password;
@@ -112,20 +119,22 @@ exports.insertParcelStatus = function(req, res){
     });
 };
 
-exports.insertCrop = function(req, res){
+exports.insertCropInfo = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     var parcels = stringToIntArray(req.body.parcels);
     var password = req.body.password;
-    var crop = JSON.parse(req.body.crop);
+    var cropInfo = JSON.parse(req.body.cropInfo);
 
 
-    var newCrop = new Crop();
-    newCrop.cropType = crop.cropType;
-    newCrop.riceVariety = crop.riceVariety;
-    newCrop.pudding = crop.pudding;
-    newCrop.showingParctice = crop.showingParctice;
-    newCrop.showingDate = crop.showingDate;
-    newCrop.updateDate = crop.updateDate;
+    var newCropInfo = new CropInfo();
+    newCropInfo.cropType = cropInfo.cropType;
+    newCropInfo.riceVariety = cropInfo.riceVariety;
+    newCropInfo.pudding = cropInfo.pudding;
+    newCropInfo.showingParctice = cropInfo.showingParctice;
+    newCropInfo.showingDate = cropInfo.showingDate;
+    newCropInfo.updateDate = cropInfo.updateDate;
 
     User.findOne({'username': name}, function (err, user) {
 
@@ -148,8 +157,7 @@ exports.insertCrop = function(req, res){
 
             for (var i = 0; i < user.parcels.length; i++) {
                 if (contains(parcels, user.parcels[i].parcelId)) {
-                    console.log(newCrop);
-                    user.parcels[i].crops.push(newCrop);
+                    user.parcels[i].cropInfos.push(newCropInfo);
                 }
             }
             user.save(function (err) {
@@ -167,6 +175,8 @@ exports.insertCrop = function(req, res){
 };
 
 exports.insertYield = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     var parcels = stringToIntArray(req.body.parcels);
     var password = req.body.password;
@@ -217,6 +227,8 @@ exports.insertYield = function(req, res){
 };
 
 exports.insertIrrigationInfo = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     var parcels = stringToIntArray(req.body.parcels);
     var password = req.body.password;
@@ -252,6 +264,161 @@ exports.insertIrrigationInfo = function(req, res){
             for (var i = 0; i < user.parcels.length; i++) {
                 if (contains(parcels, user.parcels[i].parcelId)) {
                     user.parcels[i].irrigationInfos.push(newIrrigationInfo);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+};
+
+exports.insertFertilizer = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var fertilizer = JSON.parse(req.body.fertilizer);
+
+    var newFertilizer = new Fertilizer();
+    newFertilizer.usageDate = fertilizer.usageDate;
+    newFertilizer.product = fertilizer.product;
+    newFertilizer.quantity = fertilizer.quantity;
+    newFertilizer.nitrogenContent = fertilizer.nitrogenContent;
+    newFertilizer.phosphorusContent = fertilizer.phosphorusContent;
+    newFertilizer.potassiumContent = fertilizer.potassiumContent;
+
+    User.findOne({'username': name}, function (err, user) {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    user.parcels[i].fertilizers.push(newFertilizer);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+};
+
+exports.insertAgrochemical = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var phenology = JSON.parse(req.body.phenology);
+
+    var newAgrochemical = new Agrochemical();
+    newAgrochemical.usageDate = agrochemical.usageDate;
+    newAgrochemical.product = agrochemical.product;
+    newAgrochemical.amount = agrochemical.amount;
+
+    User.findOne({'username': name}, function (err, user) {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    user.parcels[i].agrochemicals.push(newAgrochemical);
+                }
+            }
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+};
+
+exports.insertPhenology = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.body.username;
+    var parcels = stringToIntArray(req.body.parcels);
+    var password = req.body.password;
+    var phenology = JSON.parse(req.body.phenology);
+
+    var newPhenology = new Phenology();
+    newPhenology.observationDate = phenology.observationDate;
+    newPhenology.developmentStage = phenology.developmentStage;
+    newPhenology.growthStage = phenology.growthStage;
+    newPhenology.code = phenology.code;
+
+
+    User.findOne({'username': name}, function (err, user) {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            var userParcelsArray = getParcelsArray(user.parcels);
+
+            //Check if all parcels belongs to user
+            for (var i = 0; i < parcels.length; i++) {
+                if (!contains(userParcelsArray, parcels[i])) {
+                    return res.status(200).send("Parcel " + parcels[i]+
+                        " does not belong to " + user.username + ".");
+                }
+            }
+
+            for (var i = 0; i < user.parcels.length; i++) {
+                if (contains(parcels, user.parcels[i].parcelId)) {
+                    user.parcels[i].phenologies.push(newPhenology);
                 }
             }
             user.save(function (err) {

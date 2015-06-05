@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var Crop = new mongoose.Schema({
+var CropInfo = new mongoose.Schema({
     cropType: String,
     riceVariety: String,
     pudding: Boolean,
@@ -9,7 +9,7 @@ var Crop = new mongoose.Schema({
     harvestDate: Date
 });
 
-module.exports = mongoose.model("Crop", Crop);
+module.exports = mongoose.model("CropInfo", CropInfo);
 
 //Example Crop
 //{

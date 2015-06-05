@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ermes Movile APP</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center">Insert PHENOLOGY</h1>
+            <div>
+                <form class="form-horizontal" id="loginForm">
+                    <div class="form-group" >
+                        <input type="text" class="form-control" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="parcels" placeholder="Parcels separated by commas. IE: '1,4,54'" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="phenology" placeholder="Insert Phenology" required/>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+EXAMPLE: { "observationDate": "08/07/2015", "developmentStage": "3rd leaf", "growthStage": "2: Tillering", "code": "22: 2 tillers derectable" }
+<div>
+    <ul id="response">
+
+    </ul>
+
+</div>
+<script>
+    // Handle the submit programatically.
+    $( "#loginForm" ).submit(function( event ) {
+
+        // Stop usuarl submit
+        event.preventDefault();
+
+        // Get values and variables:
+        var $form = $( this ),
+                username = $form.find( "input[name='username']" ).val(),
+                parcels = $form.find( "input[name='parcels']" ).val(),
+                password = $form.find( "input[name='password']" ).val(),
+                arrayParcels = parcels.split(','),
+                phenology = $form.find( "input[name='phenology']" ).val(),
+
+                url = "http://localhost:6585/api/parcels/phenology";
+                //url = "http://ermes.dlsi.uji.es:6585/api/parcels/fertilizer";
+                //url = $form.attr( "action" );
+
+        // Make the POST
+        var posting = $.post( url, { username: username, password: password, parcels: arrayParcels, phenology: phenology} );
+
+        // Show results asynchronously.
+        posting.done(function( data ) {
+            console.log(data);
+            $("#response").empty();
+        });
+    });
+
+</script>
+</body>
+</html>

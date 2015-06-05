@@ -19,7 +19,8 @@ exports.findAllUsers = function(req, res){
 
 //GET - Return a User with specified username.
 exports.findUserByName = function(req, res) {
-
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.params.username;
     User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 }, function (err, user) {
 
@@ -66,6 +67,8 @@ exports.findUserByName = function(req, res) {
 };*/
 
 exports.insertParcelsInUser = function(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     console.log(req.body);
     response = res;
@@ -90,6 +93,7 @@ exports.insertParcelsInUser = function(req, res) {
 };
 
 function getUsedParcels(user, newPacels){
+
     User.find({},{"_id": 0, "parcels.parcelId": 1}, function(err, parcels){
         var totalOwnedParcels = [];
         for(var i = 0; i < parcels.length; i++) {
@@ -106,6 +110,7 @@ function getUsedParcels(user, newPacels){
 }
 
 function getPreviousUserParcels(user, totalOwnedParcels, newPacels){
+
     User.findOne({username: user.username}, function(err, user){
         var previousOwnedParcels = [];
             var userParcels = user.parcels;

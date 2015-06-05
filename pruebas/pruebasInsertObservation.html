@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ermes Movile APP</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <!--<script src="http://malsup.github.com/jquery.form.js"></script>-->
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center">Insert OBSERVATION</h1>
+            <div>
+                <form id="pathogenForm" name="loginForm" class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <div class="form-group" >
+                        <input type="text" class="form-control" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="parcels" placeholder="Parcels separated by commas. IE: '1,4,54'" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="observation" placeholder="Insert Observation" required/>
+                    </div>
+                    <div class="form-group">
+                        <input  type="file" class="form-control" name="file" placeholder="Select File"/>
+                    </div>
+                    <button type="submit" name="button" class="btn btn-default">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+EXAMPLE:{ "observationDate": "08/06/2015","comment": "Comement Observation" }
+
+
+<div>
+    <ul id="response">
+
+    </ul>
+
+</div>
+
+
+<script>
+    $('#pathogenForm').submit( function( e ) {
+                $.ajax( {
+                    url: 'http://localhost:6585/api/parcels/observation',
+                    type: 'POST',
+                    data: new FormData( this ),
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        console.log(res);
+                        $("#response").html("AQUI DEBERÏA IR LA IMAGEN");
+                    }
+                } );
+                e.preventDefault();
+            } );
+
+
+
+//    // Handle the submit programatically.
+//    $( "#loginForm" ).submit(function( event ) {
+//        console.log("NANA")
+//        // Stop usuarl submit
+//        event.preventDefault();
+//
+//        // Get values and variables:
+//        var $form = $( this ),
+//                username = $form.find( "input[name='username']" ).val(),
+//                parcels = $form.find( "input[name='parcels']" ).val(),
+//                password = $form.find( "input[name='password']" ).val(),
+//                arrayParcels = parcels.split(','),
+//                pathogen = $form.find( "input[name='pathogen']" ).val(),
+//                image = $form.find( "input[name='file']" ).val();
+//                console.log(image);
+//                url = "http://localhost:6585/api/parcels/pathogen";
+//        //url = "http://ermes.dlsi.uji.es:6585/api/parcels/fertilizer";
+//        //url = $form.attr( "action" );
+//
+//        // Make the POST
+//        var posting = $.post( url, { username: username, password: password, parcels: arrayParcels, pathogen: pathogen, image: image} );
+//
+//        // Show results asynchronously.
+//        posting.done(function( data ) {
+//            console.log(data);
+//            $("#response").empty();
+//        });
+//    });
+
+</script>
+</body>
+</html>
