@@ -11,12 +11,12 @@ var fs = require("fs");
 exports.insertPathogen = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
-    var parcelsArray= req.body.parcels.split(',');
     var name = req.body.username;
-    var parcels = stringToIntArray(parcelsArray);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var pathogen = JSON.parse(req.body.pathogen);
 
@@ -92,9 +92,8 @@ exports.insertDisease = function(req, res){
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
-    var parcelsArray= req.body.parcels.split(',');
     var name = req.body.username;
-    var parcels = stringToIntArray(parcelsArray);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var disease = JSON.parse(req.body.disease);
 
@@ -154,9 +153,8 @@ exports.insertWeed = function(req, res){
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
-    var parcelsArray= req.body.parcels.split(',');
     var name = req.body.username;
-    var parcels = stringToIntArray(parcelsArray);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var weed = JSON.parse(req.body.weed);
 
@@ -216,9 +214,8 @@ exports.insertObservation = function(req, res){
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
-    var parcelsArray= req.body.parcels.split(',');
     var name = req.body.username;
-    var parcels = stringToIntArray(parcelsArray);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var observation = JSON.parse(req.body.observation);
 
@@ -269,7 +266,6 @@ exports.insertObservation = function(req, res){
     });
 
 };
-
 
 function isValidPassword(user, password) {
     return bCrypt.compareSync(password, user.password);

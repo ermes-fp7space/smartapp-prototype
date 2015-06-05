@@ -15,7 +15,7 @@ exports.insertSoil = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var soil = JSON.parse(req.body.soil);
    //var soil = JSON.parse(req.body.soil.replace(/\'/g, "\""));
@@ -70,7 +70,7 @@ exports.insertParcelStatus = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var parcelStatus = JSON.parse(req.body.parcelStatus);
 
@@ -123,7 +123,7 @@ exports.insertCropInfo = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var cropInfo = JSON.parse(req.body.cropInfo);
 
@@ -178,7 +178,7 @@ exports.insertYield = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var yield = JSON.parse(req.body.yield);
 
@@ -230,7 +230,7 @@ exports.insertIrrigationInfo = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var irrigationInfo = JSON.parse(req.body.irrigationInfo);
 
@@ -285,8 +285,9 @@ exports.insertFertilizer = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
+
     var fertilizer = JSON.parse(req.body.fertilizer);
 
     var newFertilizer = new Fertilizer();
@@ -338,9 +339,9 @@ exports.insertAgrochemical = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
-    var phenology = JSON.parse(req.body.phenology);
+    var agrochemical = JSON.parse(req.body.agrochemical);
 
     var newAgrochemical = new Agrochemical();
     newAgrochemical.date = agrochemical.date;
@@ -388,7 +389,7 @@ exports.insertPhenology = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = stringToIntArray(req.body.parcels);
+    var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var phenology = JSON.parse(req.body.phenology);
 
