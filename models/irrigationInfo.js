@@ -4,9 +4,10 @@ var IrrigationInfo = new mongoose.Schema({
     startDate: Date,
     endDate: Date,
     quantityOfWaterMeasure: String,
-    quantityOfWaterValue: Number,
-    quantityOfWaterHours: Number,
-    waterDepth: Number
+    waterQuantity: Number,
+    waterHours: Number,
+    waterDepth: Number,
+    date: Date
 });
 
 module.exports = mongoose.model("IrrigationInfo", IrrigationInfo);

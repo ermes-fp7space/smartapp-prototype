@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var Yield = new mongoose.Schema({
-    harvestDate: Date,
+    date: Date,
     yield: Number,
     comments: String
 });

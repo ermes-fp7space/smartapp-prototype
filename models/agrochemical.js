@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var Agrochemical = new mongoose.Schema({
-    usageDate: Date,
+    date: Date,
     product: String,
     amount: Number
 });

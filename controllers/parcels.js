@@ -24,7 +24,7 @@ exports.insertSoil = function(req, res){
     newSoil.soilTexture = soil.soilTexture;
     newSoil.organicMatter = soil.organicMatter;
     newSoil.ph = soil.ph;
-    newSoil.updateDate = soil.updateDate;
+    newSoil.date = soil.date;
 
     User.findOne({'username': name}, function (err, user) {
 
@@ -77,7 +77,7 @@ exports.insertParcelStatus = function(req, res){
 
     var newParcelStatus = new ParcelStatus();
     newParcelStatus.parcelStatus = parcelStatus.parcelStatus;
-    newParcelStatus.updateDate = parcelStatus.updateDate;
+    newParcelStatus.date = parcelStatus.date;
 
     User.findOne({'username': name}, function (err, user) {
 
@@ -132,9 +132,9 @@ exports.insertCropInfo = function(req, res){
     newCropInfo.cropType = cropInfo.cropType;
     newCropInfo.riceVariety = cropInfo.riceVariety;
     newCropInfo.pudding = cropInfo.pudding;
-    newCropInfo.showingParctice = cropInfo.showingParctice;
-    newCropInfo.showingDate = cropInfo.showingDate;
-    newCropInfo.updateDate = cropInfo.updateDate;
+    newCropInfo.showingPractice = cropInfo.showingPractice;
+    newCropInfo.date = cropInfo.date;
+
 
     User.findOne({'username': name}, function (err, user) {
 
@@ -184,7 +184,7 @@ exports.insertYield = function(req, res){
 
 
     var newYield = new Yield();
-    newYield.harvestDate = yield.harvestDate;
+    newYield.date = yield.date;
     newYield.yield = yield.yield;
     newYield.comments = yield.comments;
 
@@ -239,9 +239,10 @@ exports.insertIrrigationInfo = function(req, res){
     newIrrigationInfo.startDate = irrigationInfo.startDate;
     newIrrigationInfo.endDate = irrigationInfo.endDate;
     newIrrigationInfo.quantityOfWaterMeasure = irrigationInfo.quantityOfWaterMeasure;
-    newIrrigationInfo.quantityOfWaterValue = irrigationInfo.quantityOfWaterValue;
-    newIrrigationInfo.quantityOfWaterHours = irrigationInfo.quantityOfWaterHours;
+    newIrrigationInfo.waterQuantity = irrigationInfo.waterQuantity;
+    newIrrigationInfo.waterHours = irrigationInfo.waterHours;
     newIrrigationInfo.waterDepth = irrigationInfo.waterDepth;
+    newIrrigationInfo.date = irrigationInfo.date;
 
     User.findOne({'username': name}, function (err, user) {
         if (err){
@@ -289,7 +290,7 @@ exports.insertFertilizer = function(req, res){
     var fertilizer = JSON.parse(req.body.fertilizer);
 
     var newFertilizer = new Fertilizer();
-    newFertilizer.usageDate = fertilizer.usageDate;
+    newFertilizer.date = fertilizer.date;
     newFertilizer.product = fertilizer.product;
     newFertilizer.quantity = fertilizer.quantity;
     newFertilizer.nitrogenContent = fertilizer.nitrogenContent;
@@ -342,7 +343,7 @@ exports.insertAgrochemical = function(req, res){
     var phenology = JSON.parse(req.body.phenology);
 
     var newAgrochemical = new Agrochemical();
-    newAgrochemical.usageDate = agrochemical.usageDate;
+    newAgrochemical.date = agrochemical.date;
     newAgrochemical.product = agrochemical.product;
     newAgrochemical.amount = agrochemical.amount;
 
@@ -392,7 +393,7 @@ exports.insertPhenology = function(req, res){
     var phenology = JSON.parse(req.body.phenology);
 
     var newPhenology = new Phenology();
-    newPhenology.observationDate = phenology.observationDate;
+    newPhenology.date = phenology.date;
     newPhenology.developmentStage = phenology.developmentStage;
     newPhenology.growthStage = phenology.growthStage;
     newPhenology.code = phenology.code;

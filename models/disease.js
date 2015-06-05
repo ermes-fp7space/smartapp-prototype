@@ -1,9 +1,9 @@
 var mongoose = require("mongoose");
 
 var Disease = new mongoose.Schema({
-    observationDate: Date,
+    date: Date,
     name: String,
-    comment: String,
+    comments: String,
     file: Buffer,
     damage: Number
 });

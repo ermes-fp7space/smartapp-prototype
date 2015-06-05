@@ -21,9 +21,9 @@ exports.insertPathogen = function(req, res){
     var pathogen = JSON.parse(req.body.pathogen);
 
     var newPathogen = new Pathogen();
-    newPathogen.observationDate = pathogen.observationDate;
+    newPathogen.date = pathogen.date;
     newPathogen.name = pathogen.name;
-    newPathogen.comment = pathogen.comment;
+    newPathogen.comments = pathogen.comments;
     newPathogen.damage = pathogen.damage;
     newPathogen.file = myFile;
 
@@ -99,9 +99,9 @@ exports.insertDisease = function(req, res){
     var disease = JSON.parse(req.body.disease);
 
     var newDisease = new Disease();
-    newDisease.observationDate = disease.observationDate;
+    newDisease.date = disease.date;
     newDisease.name = disease.name;
-    newDisease.comment = disease.comment;
+    newDisease.comments = disease.comments;
     newDisease.damage = disease.damage;
     newDisease.file = myFile;
 
@@ -161,9 +161,9 @@ exports.insertWeed = function(req, res){
     var weed = JSON.parse(req.body.weed);
 
     var newWeed = new Weed();
-    newWeed.observationDate = weed.observationDate;
+    newWeed.date = weed.date;
     newWeed.name = weed.name;
-    newWeed.comment = weed.comment;
+    newWeed.comments = weed.comments;
     newWeed.damage = weed.damage;
     newWeed.file = myFile;
 
@@ -223,8 +223,8 @@ exports.insertObservation = function(req, res){
     var observation = JSON.parse(req.body.observation);
 
     var newObservation = new Observation();
-    newObservation.observationDate = observation.observationDate;
-    newObservation.comment = observation.comment;
+    newObservation.date = observation.date;
+    newObservation.comments = observation.comments;
     newObservation.file = myFile;
 
 

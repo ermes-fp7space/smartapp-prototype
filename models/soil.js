@@ -5,7 +5,7 @@ var Soil = new mongoose.Schema({
             soilTexture: String,
             organicMatter: Number,
             ph: Number,
-            updateDate: Date
+            date: Date
         });
 
 module.exports = mongoose.model("Soil", Soil);

@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 
 var Observation = new mongoose.Schema({
-    observationDate: Date,
-    comment: String,
+    date: Date,
+    comments: String,
     file: Buffer
 });
 

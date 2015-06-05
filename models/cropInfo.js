@@ -3,10 +3,9 @@ var mongoose = require("mongoose");
 var CropInfo = new mongoose.Schema({
     cropType: String,
     riceVariety: String,
-    pudding: Boolean,
-    showingParctice: String,
-    showingDate: Date,
-    harvestDate: Date
+    pudding: String,
+    showingPractice: String,
+    date: Date
 });
 
 module.exports = mongoose.model("CropInfo", CropInfo);

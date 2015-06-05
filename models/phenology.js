@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var Phenology = new mongoose.Schema({
-    observationDate: Date,
+    date: Date,
     developmentStage: String,
     growthStage: String,
     code: String
