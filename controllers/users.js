@@ -34,6 +34,41 @@ exports.findUserByName = function(req, res) {
     });
 };
 
+exports.findSortUserByName = function(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.params.username;
+    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 }, function (err, user) {
+        if (err) return res.send(500, err.message);
+
+
+
+        if (user) {
+            var responseParcels = [];
+            var userParcels = user.parcels;
+            for(var j = 0; j < userParcels.length; j++) {
+                responseParcels.push(userParcels[j].parcelId);
+            }
+
+
+
+
+            var responseText= '{"user": "' + user.username +
+                '", "email": "' + user.email +
+                '", "parcels": [' + responseParcels + ']}';
+            console.log("TEXT: " + responseText);
+            var responseJson = JSON.parse(responseText);
+            console.log("JSON: " + responseText);
+            //return response.status(200).send(responseJson);
+
+            res.status(200).jsonp(responseJson);
+        }
+        else {
+            res.status(200).jsonp("User " + name + " does not exists.");
+        }
+    });
+};
+
 /*exports.insertSoils = function(req, res){
     var name = req.body.username;
     User.findOne({'username': name}, function (err, user) {

@@ -116,6 +116,8 @@ usersApi.route(usersApiRoute)
     .post(UsersController.insertParcelsInUser);
 usersApi.route(usersApiRoute + '/:username')
     .get(UsersController.findUserByName);
+usersApi.route(usersApiRoute + '/sort/:username')
+    .get(UsersController.findSortUserByName);
 app.use('/api', usersApi);
 
 
