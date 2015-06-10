@@ -8,6 +8,7 @@ var User = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
+    region: String,
     parcels: [ParcelSchema]
     });
 

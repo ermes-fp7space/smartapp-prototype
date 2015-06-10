@@ -38,7 +38,7 @@ exports.findSortUserByName = function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.params.username;
-    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 }, function (err, user) {
+    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1}, function (err, user) {
         if (err) return res.send(500, err.message);
 
 
@@ -49,16 +49,11 @@ exports.findSortUserByName = function(req, res) {
             for(var j = 0; j < userParcels.length; j++) {
                 responseParcels.push(userParcels[j].parcelId);
             }
-
-
-
-
             var responseText= '{"user": "' + user.username +
                 '", "email": "' + user.email +
+                '", "region": "' + user.region +
                 '", "parcels": [' + responseParcels + ']}';
-            console.log("TEXT: " + responseText);
             var responseJson = JSON.parse(responseText);
-            console.log("JSON: " + responseText);
             //return response.status(200).send(responseJson);
 
             res.status(200).jsonp(responseJson);
@@ -112,7 +107,9 @@ exports.insertParcelsInUser = function(req, res) {
             return res.status(500).send(err.message);
         }
         else if (user) {
-            var newParcels = req.body.parcels;
+			if(req.body.parcels!=undefined)
+				var newParcels = req.body.parcels;
+			else var newParcels = [];
 
             if(!isValidPassword(user, req.body.password)){
 
@@ -175,22 +172,23 @@ function updateUserParcels(user, usedParcels, newParcels){
 
     console.log("Used Parcels: " + usedParcels);
     console.log("New Parcels: " + newParcels);
-    for(var i = 0; i < newParcels.length; i++){
-        if(contains(usedParcels, newParcels[i])){
-            response.status(200).send("ParcelsUsed");
-            return;
-        }
-    }
+		for(var i = 0; i < newParcels.length; i++){
+			if(contains(usedParcels, newParcels[i])){
+				response.status(200).send("ParcelsUsed");
+				return;
+			}
+		}
+	
     user.parcels = [];
-
-    for(var i = 0; i < newParcels.length; i++){
-        var p = parseInt(newParcels[i]);
-        if(isInt(p)){
-            var newParcel = new Parcel();
-            newParcel.parcelId = p;
-            user.parcels.push(newParcel);
-        }
-    }
+		for(var i = 0; i < newParcels.length; i++){
+			var p = parseInt(newParcels[i]);
+			if(isInt(p)){
+				var newParcel = new Parcel();
+				newParcel.parcelId = p;
+				user.parcels.push(newParcel);
+			}
+		}
+	
     user.save(function (err) {
         if (err){
             return response.status(500).send(err.message);

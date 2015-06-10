@@ -15,11 +15,15 @@ exports.insertSoil = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
+
     var parcels = JSON.parse(req.body.parcels);
+
     var password = req.body.password;
+	
     var soil = JSON.parse(req.body.soil);
    //var soil = JSON.parse(req.body.soil.replace(/\'/g, "\""));
 
+   
     var newSoil = new Soil();
     newSoil.soilTexture = soil.soilTexture;
     newSoil.organicMatter = soil.organicMatter;
@@ -123,7 +127,7 @@ exports.insertCropInfo = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
-    var parcels = JSON.parse(req.body.parcels);
+   var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var cropInfo = JSON.parse(req.body.cropInfo);
 
@@ -287,7 +291,6 @@ exports.insertFertilizer = function(req, res){
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
-
     var fertilizer = JSON.parse(req.body.fertilizer);
 
     var newFertilizer = new Fertilizer();

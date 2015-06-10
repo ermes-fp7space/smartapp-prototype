@@ -11,10 +11,10 @@ var fs = require("fs");
 exports.insertPathogen = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
+    
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
@@ -153,6 +153,7 @@ exports.insertWeed = function(req, res){
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
+    
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
@@ -214,6 +215,7 @@ exports.insertObservation = function(req, res){
     var tmpFilePath = req.files.file.path;
     var myFile = fs.readFileSync(tmpFilePath);
 
+   
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
@@ -266,6 +268,7 @@ exports.insertObservation = function(req, res){
     });
 
 };
+
 
 function isValidPassword(user, password) {
     return bCrypt.compareSync(password, user.password);
