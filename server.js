@@ -1,5 +1,6 @@
 //Imports
 var express = require("express"),
+    request = require('request'),
     app = express(),
     bodyParser = require("body-parser"),
     methodOverride = require("method-override"),
@@ -74,6 +75,28 @@ app.use(flash());
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
+//Route for server proxy.
+app.get('/proxy', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var urlData = req.originalUrl.split(req.path+'?');
+    console.log(urlData);
+    if(urlData[1]==undefined){
+       // console.log("PROXY: Wrong use of Proxy");
+        res.send("Wrong Use of proxy");
+    }
+    else {
+        req.pipe(request(urlData[1]))
+            .on('response', function (response) {
+                console.log("PROXY: Redirect: " + urlData[1]);
+            })
+            .on('error', function (err) {
+                console.log("PROXY: Illegal arg catched" + err);
+            })
+            .pipe(res);
+    }
+});
+
 //Parcels API Routes
 var parcelsApiRoute = "/parcels";
 var parcelsApi = express.Router();
@@ -130,9 +153,12 @@ app.use('/api', usersApi);
 //    .get(UsersController.findUserByName);
 //app.use('/api', usersApi);
 
-//
-var theport = process.env.PORT || 6585;
+
+var PORT = 6585;
 
 //Start to listen.
-app.listen(theport, function(){
-    console.log("Node Server Started On Port: " + theport);});
+var server = app.listen(PORT, function() {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('NodeServer for SmartApp working at http://%s:%s', host, port);
+});
