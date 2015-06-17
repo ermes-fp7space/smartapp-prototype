@@ -1,6 +1,8 @@
 //This model represents the Schema of the User. (users) collection.
 
 var mongoose = require("mongoose");
+//var LastPosition = mongoose.model("LastPosition");
+//var LastPositionSchema = LastPosition.schema;
 var Parcel = mongoose.model("Parcel");
 var ParcelSchema = Parcel.schema;
 
@@ -9,6 +11,12 @@ var User = new mongoose.Schema({
     password: String,
     email: String,
     region: String,
+    lastPosition:{
+        lastX: Number,
+        lastY: Number,
+        zoom: Number,
+        spatialReference: String
+    },
     parcels: [ParcelSchema]
     });
 

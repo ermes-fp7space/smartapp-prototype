@@ -6,6 +6,7 @@ var express = require("express"),
     methodOverride = require("method-override"),
     mongoose = require("mongoose"),
     ip = require("ip"),
+    lastPositionModel = require("./models/lastPosition")(app, mongoose),
     observationModel = require("./models/observation")(app, mongoose),
     weedModel = require("./models/weed")(app, mongoose),
     diseaseModel = require("./models/disease")(app, mongoose),
@@ -140,7 +141,11 @@ usersApi.route(usersApiRoute)
 usersApi.route(usersApiRoute + '/:username')
     .get(UsersController.findUserByName);
 usersApi.route(usersApiRoute + '/sort/:username')
-    .get(UsersController.findSortUserByName);
+    .get(UsersController.findShortUserByName);
+usersApi.route(usersApiRoute + '/short/:username')
+    .get(UsersController.findShortUserByName);
+usersApi.route(usersApiRoute + '/position')
+    .post(UsersController.insertLastPosition);
 app.use('/api', usersApi);
 
 

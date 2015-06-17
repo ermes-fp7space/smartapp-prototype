@@ -5,6 +5,7 @@
 
 var mongoose = require("mongoose");
 var User = mongoose.model("User");
+var LastPosition = mongoose.model("LastPosition");
 var Parcel = mongoose.model("Parcel");
 var Soil = mongoose.model("Soil");
 var response = null;
@@ -18,6 +19,50 @@ exports.findAllUsers = function(req, res){
 };
 
 //GET - Return a User with specified username.
+
+exports.insertLastPosition = function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.body.username;
+    var password = req.body.password;
+
+    var position = JSON.parse(req.body.position);
+
+
+
+
+    User.findOne({'username': name}, function (err, user) {
+
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        else if(user) {
+
+            if(!isValidPassword(user, password))
+                return res.status(200).send("Password Wrong.");
+            console.log(user);
+            user.lastPosition.lastX = position.lastX;
+            user.lastPosition.lastY = position.lastY;
+            user.lastPosition.zoom = position.zoom;
+            user.lastPosition.spatialReference = position.spatialReference;
+
+
+
+
+            user.save(function (err) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                else {
+
+                    return res.status(200).send("OK");
+                }
+            });
+        }
+        else return res.status(200).send("User " + name + " does not exists.");
+    });
+};
+
 exports.findUserByName = function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -34,11 +79,11 @@ exports.findUserByName = function(req, res) {
     });
 };
 
-exports.findSortUserByName = function(req, res) {
+exports.findShortUserByName = function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.params.username;
-    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1}, function (err, user) {
+    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1, lastPosition: 1}, function (err, user) {
         if (err) return res.send(500, err.message);
 
 
@@ -49,13 +94,24 @@ exports.findSortUserByName = function(req, res) {
             for(var j = 0; j < userParcels.length; j++) {
                 responseParcels.push(userParcels[j].parcelId);
             }
+            //console.log("RESPONSE PARCELS NORMAL: " + responseParcels);
+
+            //responseParcelsString = responseParcels.toString();
+            //console.log("RESPONSE PARCELS STRING: " + responseParcelsString);
             var responseText= '{"user": "' + user.username +
                 '", "email": "' + user.email +
                 '", "region": "' + user.region +
-                '", "parcels": [' + responseParcels + ']}';
-            var responseJson = JSON.parse(responseText);
-            //return response.status(200).send(responseJson);
+                '", "lastPosition": ' +
+                '{"spatialReference": "' + user.lastPosition.spatialReference +
+                '", "lastX": "' + user.lastPosition.lastX +
+                '", "lastY": "' + user.lastPosition.lastY +
+                '", "zoom": "' + user.lastPosition.zoom + '"}' +
+                ', "parcels": "'+ responseParcels + '"}';
 
+
+            //return response.status(200).send(responseJson);
+            console.log("RESPONSE_JSON: " + responseText);
+            var responseJson = JSON.parse(responseText);
             res.status(200).jsonp(responseJson);
         }
         else {
@@ -63,38 +119,6 @@ exports.findSortUserByName = function(req, res) {
         }
     });
 };
-
-/*exports.insertSoils = function(req, res){
-    var name = req.body.username;
-    User.findOne({'username': name}, function (err, user) {
-        if (err){
-            return res.status(500).send(err.message);
-        }
-        else if (user) {
-            var parcelsToUpdate = req.body.parcels;
-            for(var i = 0; i < parcelsToUpdate.length; i++) {
-                User.findOne({"parcels.parcelId": parcelsToUpdate[i]}, function(err, user2) {
-                    if (err){
-                        return res.status(500).send(err.message);
-                    }
-                    else if (user2) {
-                        var newSoil = new Soil();
-                        newSoil.soilTexture = req.body.soil.soilTexture;
-                        newSoil.organicMatter = req.body.soil.organicMatter;
-                        newSoil.ph = req.body.soil.ph;
-                        newSoil.updateDate = req.body.soil.updateDate;
-                        user2.parcels
-
-                    }
-
-                });
-            }
-        }
-        else {
-            return res.status(200).send("User " + name + " does not exists.");
-        }
-    });
-};*/
 
 exports.insertParcelsInUser = function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -181,12 +205,12 @@ function updateUserParcels(user, usedParcels, newParcels){
 	
     user.parcels = [];
 		for(var i = 0; i < newParcels.length; i++){
-			var p = parseInt(newParcels[i]);
-			if(isInt(p)){
-				var newParcel = new Parcel();
-				newParcel.parcelId = p;
-				user.parcels.push(newParcel);
-			}
+			var p = newParcels[i];
+			//if(isInt(p)){
+            var newParcel = new Parcel();
+            newParcel.parcelId = p;
+            user.parcels.push(newParcel);
+			//}
 		}
 	
     user.save(function (err) {

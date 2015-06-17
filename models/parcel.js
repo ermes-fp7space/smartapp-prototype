@@ -27,7 +27,7 @@ var Observation = mongoose.model("Observation");
 var ObservationSchema = Observation.schema;
 
 var Parcel = new mongoose.Schema({
-    parcelId: Number,
+    parcelId: String,
     soils:[SoilSchema],
     parcelStatus:[ParcelStatusSchema],
     cropInfos:[CropInfoSchema],
