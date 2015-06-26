@@ -29,6 +29,13 @@ module.exports = function(passport){
                             newUser.password = createHash(password);
                             newUser.email = req.body.email;
                             newUser.region = req.body.region;
+                            console.log("Region: " + req.body.region)
+                            console.log("Profile: " + req.body.profile)
+                            if(!req.body.profile) {
+                                newUser.profile = "local";
+                            } else {
+                                newUser.profile = req.body.profile;
+                            }
                             // save the user
                             newUser.save(function(err) {
                                 if (err){

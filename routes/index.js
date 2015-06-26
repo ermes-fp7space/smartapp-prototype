@@ -42,6 +42,8 @@ module.exports = function(passport){
                     return next(err);
                 }
                 var response= '{"user": "' + user.username +
+                                '", "region": "' + user.region  +
+                                '", "profile": "' + user.profile  +
                                 '", "email": "' + user.email  + '"}';
                 console.log(response)
                 var responseJson = JSON.parse(response);

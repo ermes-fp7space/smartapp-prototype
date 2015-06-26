@@ -20,7 +20,7 @@ module.exports = function(passport) {
                     }
                     //Username does not exists, log error and go back.
                     if (!user) {
-                        console.log("NOt exists: "+ username);
+                        console.log("Not exists: "+ username);
                         return done(null, false, req.flash('message', "User does not exists"));
                     }
                     // User exists, password missmatch, log error and go back.
@@ -29,6 +29,7 @@ module.exports = function(passport) {
                         return done(null, false, req.flash('message', "Password Wrong"));
                     }
                     //All works fine.
+                    console.log(user);
                     return done(null, user);
                 }
             );

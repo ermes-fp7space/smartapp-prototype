@@ -67,7 +67,7 @@ exports.findUserByName = function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.params.username;
-    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 }, function (err, user) {
+    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1, profile: 1}, function (err, user) {
 
         if (err) return res.send(500, err.message);
         if (user) {
@@ -83,7 +83,7 @@ exports.findShortUserByName = function(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.params.username;
-    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1, lastPosition: 1}, function (err, user) {
+    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1, lastPosition: 1, profile: 1}, function (err, user) {
         if (err) return res.send(500, err.message);
 
 
@@ -101,6 +101,7 @@ exports.findShortUserByName = function(req, res) {
             var responseText= '{"user": "' + user.username +
                 '", "email": "' + user.email +
                 '", "region": "' + user.region +
+                '", "profile": "' + user.profile +
                 '", "lastPosition": ' +
                 '{"spatialReference": "' + user.lastPosition.spatialReference +
                 '", "lastX": "' + user.lastPosition.lastX +
@@ -110,7 +111,7 @@ exports.findShortUserByName = function(req, res) {
 
 
             //return response.status(200).send(responseJson);
-            console.log("RESPONSE_JSON: " + responseText);
+            //console.log("RESPONSE_JSON: " + responseText);
             var responseJson = JSON.parse(responseText);
             res.status(200).jsonp(responseJson);
         }
@@ -196,12 +197,14 @@ function updateUserParcels(user, usedParcels, newParcels){
 
     console.log("Used Parcels: " + usedParcels);
     console.log("New Parcels: " + newParcels);
-		for(var i = 0; i < newParcels.length; i++){
-			if(contains(usedParcels, newParcels[i])){
-				response.status(200).send("ParcelsUsed");
-				return;
-			}
-		}
+
+    //UNCOMMENT TO CHECK IF USER SELECT PARCEL OWNED BY OTHERS
+    //for(var i = 0; i < newParcels.length; i++){
+    //    if(contains(usedParcels, newParcels[i])){
+    //        response.status(200).send("ParcelsUsed");
+    //        return;
+    //    }
+    //}
 	
     user.parcels = [];
 		for(var i = 0; i < newParcels.length; i++){

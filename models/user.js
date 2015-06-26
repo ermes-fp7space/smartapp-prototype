@@ -11,6 +11,7 @@ var User = new mongoose.Schema({
     password: String,
     email: String,
     region: String,
+    profile: String,
     lastPosition:{
         lastX: Number,
         lastY: Number,
