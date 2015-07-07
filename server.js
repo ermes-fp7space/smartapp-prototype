@@ -101,9 +101,6 @@ app.get('/proxy', function (req, res) {
 //Parcels API Routes
 var parcelsApiRoute = "/parcels";
 var parcelsApi = express.Router();
-//parcelsApi.route(parcelsApiRoute)
-//    .get(ParcelsController.findAllParcels)
-//    .post(ParcelsController.addParcel);
 parcelsApi.route(parcelsApiRoute + '/soil')
     .post(ParcelsController.insertSoil);
 parcelsApi.route(parcelsApiRoute + '/parcelStatus')
@@ -140,6 +137,8 @@ usersApi.route(usersApiRoute)
     .post(UsersController.insertParcelsInUser);
 usersApi.route(usersApiRoute + '/:username')
     .get(UsersController.findUserByName);
+usersApi.route(usersApiRoute + '/lastmodified/:username')
+    .get(UsersController.findLastModifiedFields);
 usersApi.route(usersApiRoute + '/sort/:username')
     .get(UsersController.findShortUserByName);
 usersApi.route(usersApiRoute + '/short/:username')
@@ -147,6 +146,13 @@ usersApi.route(usersApiRoute + '/short/:username')
 usersApi.route(usersApiRoute + '/position')
     .post(UsersController.insertLastPosition);
 app.use('/api', usersApi);
+
+//Get info from parcels API
+var parcelsInfoApiRoute = "/parcelsinfo";
+var parcelsInfoApi = express.Router();
+parcelsInfoApi.route(parcelsInfoApiRoute)
+    .post(UsersController.findParcelByUserAndId);
+app.use('/api', parcelsInfoApi);
 
 
 ////Users API Routes

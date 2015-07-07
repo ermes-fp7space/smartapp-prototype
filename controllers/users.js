@@ -18,26 +18,190 @@ exports.findAllUsers = function(req, res){
     });
 };
 
-//GET - Return a User with specified username.
+exports.findLastModifiedFields = function(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.params.username;
+
+
+    User.findOne({'username': name}, { _id: 0, username: 1, email: 1, parcels: 1 , region: 1, lastPosition: 1, profile: 1}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if (user) {
+            var responseText= '{"user": "' + user.username + '", "parcels": [';
+            var userParcels = user.parcels;
+            for(var j = 0; j < userParcels.length; j++) {
+                responseText+='{"parcelId": "' + userParcels[j].parcelId + '"'
+
+                //AGROCHEMICAL
+                if(userParcels[j].agrochemicals.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].agrochemicals.length; i++) {
+                        dates.push(userParcels[j].agrochemicals[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"agrochemicals": "' + lastDate + '"';
+                }
+                else responseText+=',"agrochemicals": ' + null;
+
+                //CROP INFO
+                if(userParcels[j].cropInfos.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].cropInfos.length; i++) {
+                        dates.push(userParcels[j].cropInfos[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"cropInfos": "' + lastDate + '"';
+                }
+                else responseText+=',"cropInfos": ' + null;
+
+                //DISEASE
+                if(userParcels[j].diseases.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].diseases.length; i++) {
+                        dates.push(userParcels[j].diseases[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"diseases": "' + lastDate + '"';
+                }
+                else responseText+=',"diseases": ' + null;
+
+                //FERTILIZER
+                if(userParcels[j].fertilizers.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].fertilizers.length; i++) {
+                        dates.push(userParcels[j].fertilizers[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"fertilizers": "' + lastDate + '"';
+                }
+                else responseText+=',"fertilizers": ' + null;
+
+                //IRRIGATION INFO
+                if(userParcels[j].irrigationInfos.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].irrigationInfos.length; i++) {
+                        dates.push(userParcels[j].irrigationInfos[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"irrigationInfo": "' + lastDate + '"';
+                }
+                else responseText+=',"irrigationInfo": ' + null;
+
+                //OBSERVATION
+                if(userParcels[j].observations.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].observations.length; i++) {
+                        dates.push(userParcels[j].observations[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"observations": "' + lastDate + '"';
+                }
+                else responseText+=',"observations": ' + null;
+
+                //PARCEL STATUS
+                if(userParcels[j].parcelStatus.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].parcelStatus.length; i++) {
+                        dates.push(userParcels[j].parcelStatus[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"parcelStatus": "' + lastDate + '"';
+                }
+                else responseText+=',"parcelStatus": ' + null;
+
+                //PATHOGEN
+                if(userParcels[j].phatogens.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].phatogens.length; i++) {
+                        dates.push(userParcels[j].phatogens[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"phatogens": "' + lastDate + '"';
+                }
+                else responseText+=',"phatogens": ' + null;
+
+                //PHENOLOGY
+                if(userParcels[j].phenologies.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].phenologies.length; i++) {
+                        dates.push(userParcels[j].phenologies[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"phenologies": "' + lastDate + '"';
+                }
+                else responseText+=',"phenologies": ' + null;
+
+                //SOIL
+                if(userParcels[j].soils.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].soils.length; i++) {
+                        dates.push(userParcels[j].soils[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"soils": "' + lastDate + '"';
+                }
+                else responseText+=',"soils": ' + null;
+
+                //WEED
+                if(userParcels[j].weeds.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].weeds.length; i++) {
+                        dates.push(userParcels[j].weeds[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"weeds": "' + lastDate + '"';
+                }
+                else responseText+=',"weeds": ' + null;
+
+                //YIELD
+                if(userParcels[j].yields.length>0){
+                    var dates = [];
+                    for(var i = 0; i < userParcels[j].yields.length; i++) {
+                        dates.push(userParcels[j].yields[i].date);
+                    }
+                    var lastDate = Math.max.apply(null, dates);
+                    lastDate = new Date(lastDate);
+                    responseText+=',"yields": "' + lastDate + '"';
+                }
+                else responseText+=',"yields": ' + null;
+
+                responseText+="}";
+                if(j<userParcels.length-1) responseText+=",";
+
+            }
+            responseText+="]}";
+            var responseJson = JSON.parse(responseText);
+            res.status(200).jsonp(responseJson);
+        }
+        else {
+            res.status(200).jsonp("User " + name + " does not exists.");
+        }
+    });
+};
 
 exports.insertLastPosition = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var name = req.body.username;
     var password = req.body.password;
-
     var position = JSON.parse(req.body.position);
 
-
-
-
     User.findOne({'username': name}, function (err, user) {
-
         if (err){
             return res.status(500).send(err.message);
         }
         else if(user) {
-
             if(!isValidPassword(user, password))
                 return res.status(200).send("Password Wrong.");
             console.log(user);
@@ -45,10 +209,6 @@ exports.insertLastPosition = function(req, res){
             user.lastPosition.lastY = position.lastY;
             user.lastPosition.zoom = position.zoom;
             user.lastPosition.spatialReference = position.spatialReference;
-
-
-
-
             user.save(function (err) {
                 if (err) {
                     return res.status(500).send(err.message);
@@ -75,6 +235,43 @@ exports.findUserByName = function(req, res) {
         }
         else {
             res.status(200).jsonp("User " + name + " does not exists.");
+        }
+    });
+};
+
+exports.findParcelByUserAndId = function(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var name = req.body.username;
+    var id = req.body.parcelid;
+    var password = req.body.password;
+    //console.log("LLega");
+    //User.findOne({'username': name}, function (err, user) {
+    //    console.log(name);
+    //    console.log(id);
+    //    console.log(password);
+    //    if (err){
+    //        return res.status(500).send(err.message);
+    //    }
+    //    else if(user) {
+    //        if (!isValidPassword(user, password))
+    //            return res.status(500).send("You are not allowed to see this info.");
+    //    }
+    //});
+
+    User.findOne({'username': name, 'parcels.parcelId': id}, {'parcels.$': 1}, function (err, user) {
+        console.log(name);
+        console.log(id);
+        console.log(password);
+        console.log(user);
+        if (err){
+            return res.send(500, err.message);
+        }
+        else if (user) {
+            return res.status(200).jsonp(user);
+        }
+        else {
+            return res.status(200).jsonp({message : "This parcel has no info."});
         }
     });
 };
