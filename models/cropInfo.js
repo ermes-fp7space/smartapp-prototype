@@ -2,9 +2,10 @@ var mongoose = require("mongoose");
 
 var CropInfo = new mongoose.Schema({
     cropType: String,
+    uploadingDate: Date,
     riceVariety: String,
     pudding: String,
-    showingPractice: String,
+    sowingPractice: String,
     date: Date
 });
 

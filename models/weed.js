@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 
 var Weed = new mongoose.Schema({
     date: Date,
+    uploadingDate: Date,
     name: String,
     comments: String,
     file: Buffer,

@@ -7,7 +7,7 @@ var IrrigationInfo = new mongoose.Schema({
     waterQuantity: Number,
     waterHours: Number,
     waterDepth: Number,
-    date: Date
+    uploadingDate: Date
 });
 
 module.exports = mongoose.model("IrrigationInfo", IrrigationInfo);

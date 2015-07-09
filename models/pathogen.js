@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 
 var Pathogen = new mongoose.Schema({
     date: Date,
+    uploadingDate: Date,
     name: String,
     comments: String,
     file: Buffer,

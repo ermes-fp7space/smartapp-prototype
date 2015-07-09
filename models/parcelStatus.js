@@ -2,7 +2,8 @@ var mongoose = require("mongoose");
 
 var ParcelStatus = new mongoose.Schema({
     parcelStatus: String,
-    date: Date
+    date: Date,
+    uploadingDate: Date
 });
 
 module.exports = mongoose.model("ParcelStatus", ParcelStatus);

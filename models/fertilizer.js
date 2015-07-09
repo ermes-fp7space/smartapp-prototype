@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 
 var Fertilizer = new mongoose.Schema({
     date: Date,
+    uploadingDate: Date,
     product: String,
     quantity: Number,
     nitrogenContent: Number,

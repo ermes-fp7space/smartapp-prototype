@@ -11,10 +11,7 @@ var fs = require("fs");
 exports.insertPathogen = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var tmpFilePath = req.files.file.path;
-    var myFile = fs.readFileSync(tmpFilePath);
 
-    
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
@@ -22,10 +19,15 @@ exports.insertPathogen = function(req, res){
 
     var newPathogen = new Pathogen();
     newPathogen.date = pathogen.date;
+    newPathogen.uploadingDate = pathogen.uploadingDate;
     newPathogen.name = pathogen.name;
     newPathogen.comments = pathogen.comments;
     newPathogen.damage = pathogen.damage;
-    newPathogen.file = myFile;
+    if(req.files.file){
+        var tmpFilePath = req.files.file.path;
+        var myFile = fs.readFileSync(tmpFilePath);
+        newPathogen.file = myFile;
+    }
 
 
     //mongoose.connection.collection("test").insert({a:1, "file": myFile}, function() {
@@ -89,8 +91,6 @@ exports.insertPathogen = function(req, res){
 exports.insertDisease = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var tmpFilePath = req.files.file.path;
-    var myFile = fs.readFileSync(tmpFilePath);
 
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
@@ -99,10 +99,15 @@ exports.insertDisease = function(req, res){
 
     var newDisease = new Disease();
     newDisease.date = disease.date;
+    newDisease.uploadingDate = disease.uploadingDate;
     newDisease.name = disease.name;
     newDisease.comments = disease.comments;
     newDisease.damage = disease.damage;
-    newDisease.file = myFile;
+    if(req.files.file){
+        var tmpFilePath = req.files.file.path;
+        var myFile = fs.readFileSync(tmpFilePath);
+        newDisease.file = myFile;
+    }
 
 
     User.findOne({'username': name}, function (err, user) {
@@ -150,10 +155,7 @@ exports.insertDisease = function(req, res){
 exports.insertWeed = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var tmpFilePath = req.files.file.path;
-    var myFile = fs.readFileSync(tmpFilePath);
 
-    
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
@@ -161,10 +163,15 @@ exports.insertWeed = function(req, res){
 
     var newWeed = new Weed();
     newWeed.date = weed.date;
+    newWeed.uploadingDate = weed.uploadingDate;
     newWeed.name = weed.name;
     newWeed.comments = weed.comments;
     newWeed.damage = weed.damage;
-    newWeed.file = myFile;
+    if(req.files.file){
+        var tmpFilePath = req.files.file.path;
+        var myFile = fs.readFileSync(tmpFilePath);
+        newWeed.file = myFile;
+    }
 
 
     User.findOne({'username': name}, function (err, user) {
@@ -212,19 +219,19 @@ exports.insertWeed = function(req, res){
 exports.insertObservation = function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var tmpFilePath = req.files.file.path;
-    var myFile = fs.readFileSync(tmpFilePath);
-
-   
     var name = req.body.username;
     var parcels = JSON.parse(req.body.parcels);
     var password = req.body.password;
     var observation = JSON.parse(req.body.observation);
 
     var newObservation = new Observation();
-    newObservation.date = observation.date;
+    newObservation.uploadingDate = observation.uploadingDate;
     newObservation.comments = observation.comments;
-    newObservation.file = myFile;
+    if(req.files.file){
+        var tmpFilePath = req.files.file.path;
+        var myFile = fs.readFileSync(tmpFilePath);
+        newObservation.file = myFile;
+    }
 
 
     User.findOne({'username': name}, function (err, user) {

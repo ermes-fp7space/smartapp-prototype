@@ -29,6 +29,7 @@ exports.insertSoil = function(req, res){
     newSoil.organicMatter = soil.organicMatter;
     newSoil.ph = soil.ph;
     newSoil.date = soil.date;
+    newSoil.uploadingDate = soil.uploadingDate;
 
     User.findOne({'username': name}, function (err, user) {
 
@@ -82,6 +83,7 @@ exports.insertParcelStatus = function(req, res){
     var newParcelStatus = new ParcelStatus();
     newParcelStatus.parcelStatus = parcelStatus.parcelStatus;
     newParcelStatus.date = parcelStatus.date;
+    newParcelStatus.uploadingDate = parcelStatus.uploadingDate;
 
     User.findOne({'username': name}, function (err, user) {
 
@@ -136,8 +138,9 @@ exports.insertCropInfo = function(req, res){
     newCropInfo.cropType = cropInfo.cropType;
     newCropInfo.riceVariety = cropInfo.riceVariety;
     newCropInfo.pudding = cropInfo.pudding;
-    newCropInfo.showingPractice = cropInfo.showingPractice;
+    newCropInfo.sowingPractice = cropInfo.sowingPractice;
     newCropInfo.date = cropInfo.date;
+    newCropInfo.uploadingDate = cropInfo.uploadingDate;
 
 
     User.findOne({'username': name}, function (err, user) {
@@ -189,6 +192,7 @@ exports.insertYield = function(req, res){
 
     var newYield = new Yield();
     newYield.date = yield.date;
+    newYield.uploadingDate = yield.uploadingDate;
     newYield.yield = yield.yield;
     newYield.comments = yield.comments;
 
@@ -246,7 +250,7 @@ exports.insertIrrigationInfo = function(req, res){
     newIrrigationInfo.waterQuantity = irrigationInfo.waterQuantity;
     newIrrigationInfo.waterHours = irrigationInfo.waterHours;
     newIrrigationInfo.waterDepth = irrigationInfo.waterDepth;
-    newIrrigationInfo.date = irrigationInfo.date;
+    newIrrigationInfo.uploadingDate = irrigationInfo.uploadingDate;
 
     User.findOne({'username': name}, function (err, user) {
         if (err){
@@ -295,6 +299,7 @@ exports.insertFertilizer = function(req, res){
 
     var newFertilizer = new Fertilizer();
     newFertilizer.date = fertilizer.date;
+    newFertilizer.uploadingDate = fertilizer.uploadingDate;
     newFertilizer.product = fertilizer.product;
     newFertilizer.quantity = fertilizer.quantity;
     newFertilizer.nitrogenContent = fertilizer.nitrogenContent;
@@ -348,6 +353,7 @@ exports.insertAgrochemical = function(req, res){
 
     var newAgrochemical = new Agrochemical();
     newAgrochemical.date = agrochemical.date;
+    newAgrochemical.uploadingDate = agrochemical.uploadingDate;
     newAgrochemical.product = agrochemical.product;
     newAgrochemical.amount = agrochemical.amount;
 
@@ -398,6 +404,7 @@ exports.insertPhenology = function(req, res){
 
     var newPhenology = new Phenology();
     newPhenology.date = phenology.date;
+    newPhenology.uploadingDate = phenology.uploadingDate;
     newPhenology.developmentStage = phenology.developmentStage;
     newPhenology.growthStage = phenology.growthStage;
     newPhenology.code = phenology.code;

@@ -2,11 +2,12 @@
 var mongoose = require("mongoose");
 
 var Soil = new mongoose.Schema({
-            soilTexture: String,
-            organicMatter: Number,
-            ph: Number,
-            date: Date
-        });
+        soilTexture: String,
+        organicMatter: Number,
+        ph: Number,
+        date: Date,
+        uploadingDate: Date
+    });
 
 module.exports = mongoose.model("Soil", Soil);
 

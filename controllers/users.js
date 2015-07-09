@@ -36,7 +36,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].agrochemicals.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].agrochemicals.length; i++) {
-                        dates.push(userParcels[j].agrochemicals[i].date);
+                        dates.push(userParcels[j].agrochemicals[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -48,19 +48,29 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].cropInfos.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].cropInfos.length; i++) {
-                        dates.push(userParcels[j].cropInfos[i].date);
+                        dates.push(userParcels[j].cropInfos[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
-                    responseText+=',"cropInfos": "' + lastDate + '"';
+
+                    for(var i = 0; i < userParcels[j].cropInfos.length; i++) {
+                        if(userParcels[j].cropInfos[i].uploadingDate==lastDate){
+                            responseText+=',"cropType": "' + userParcels[j].cropInfos[i].cropType + '"';
+                            responseText+=',"riceVariety": "' + userParcels[j].cropInfos[i].riceVariety + '"';
+                        }
+                    }
+                    //responseText+=',"cropInfos": "' + lastDate + '"';
                 }
-                else responseText+=',"cropInfos": ' + null;
+                else{
+                    responseText+=',"cropType": ' + null;
+                    responseText+=',"riceVariety": ' + null;
+                }
 
                 //DISEASE
                 if(userParcels[j].diseases.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].diseases.length; i++) {
-                        dates.push(userParcels[j].diseases[i].date);
+                        dates.push(userParcels[j].diseases[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -72,7 +82,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].fertilizers.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].fertilizers.length; i++) {
-                        dates.push(userParcels[j].fertilizers[i].date);
+                        dates.push(userParcels[j].fertilizers[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -84,7 +94,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].irrigationInfos.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].irrigationInfos.length; i++) {
-                        dates.push(userParcels[j].irrigationInfos[i].date);
+                        dates.push(userParcels[j].irrigationInfos[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -96,7 +106,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].observations.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].observations.length; i++) {
-                        dates.push(userParcels[j].observations[i].date);
+                        dates.push(userParcels[j].observations[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -108,7 +118,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].parcelStatus.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].parcelStatus.length; i++) {
-                        dates.push(userParcels[j].parcelStatus[i].date);
+                        dates.push(userParcels[j].parcelStatus[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -120,7 +130,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].phatogens.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].phatogens.length; i++) {
-                        dates.push(userParcels[j].phatogens[i].date);
+                        dates.push(userParcels[j].phatogens[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -132,7 +142,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].phenologies.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].phenologies.length; i++) {
-                        dates.push(userParcels[j].phenologies[i].date);
+                        dates.push(userParcels[j].phenologies[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -144,7 +154,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].soils.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].soils.length; i++) {
-                        dates.push(userParcels[j].soils[i].date);
+                        dates.push(userParcels[j].soils[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -156,7 +166,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].weeds.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].weeds.length; i++) {
-                        dates.push(userParcels[j].weeds[i].date);
+                        dates.push(userParcels[j].weeds[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -168,7 +178,7 @@ exports.findLastModifiedFields = function(req, res) {
                 if(userParcels[j].yields.length>0){
                     var dates = [];
                     for(var i = 0; i < userParcels[j].yields.length; i++) {
-                        dates.push(userParcels[j].yields[i].date);
+                        dates.push(userParcels[j].yields[i].uploadingDate);
                     }
                     var lastDate = Math.max.apply(null, dates);
                     lastDate = new Date(lastDate);
@@ -260,10 +270,10 @@ exports.findParcelByUserAndId = function(req, res) {
     //});
 
     User.findOne({'username': name, 'parcels.parcelId': id}, {'parcels.$': 1}, function (err, user) {
-        console.log(name);
-        console.log(id);
-        console.log(password);
-        console.log(user);
+        //console.log(name);
+        //console.log(id);
+        //console.log(password);
+        //console.log(user);
         if (err){
             return res.send(500, err.message);
         }
